@@ -22,17 +22,18 @@ const template = `
         file:mr-4 file:py-2 file:px-4
         file:rounded-full file:border-0
         file:text-sm file:font-semibold
-        file:bg-violet-50 file:text-violet-700
-        hover:file:bg-violet-100" />
+        file:bg-violet-50 file:text-violet-700 file:cursor-pointer
+        hover:file:bg-violet-100 cursor-pointer" />
       <button 
         @click="uploadImage" 
         :disabled="!selectedFile" 
-        class="bg-blue-500 px-3 py-2 mt-5 rounded-md text-white">
+        class="bg-blue-500 hover:bg-blue-600 px-3 py-2 mt-5 rounded-md text-white cursor-pointer">
         Upload
       </button>
     </div>
 
     <div class="bg-white shadow-md rounded-lg p-4 content-center">
+      <!--Loading-->
       <template v-if="isLoading">
         <div class="gradient-bg">
           <div class="gradients-container">
@@ -46,6 +47,7 @@ const template = `
         </div>
       </template>
 
+      <!--Image Path-->
       <template v-else-if="imagePath">
         <div class="text-center">
           <h2 class="font-semibold">Uploaded Image Succesfully</h2>
@@ -57,12 +59,13 @@ const template = `
           <button 
             @click="copyImagePath" 
             :disabled="!selectedFile" 
-            class="bg-blue-500 px-3 py-2 mt-3 rounded-md text-white">
+            class="bg-blue-500 hover:bg-blue-600 px-3 py-2 mt-3 rounded-md text-white cursor-pointer">
             Copy Path
           </button>
         </div>
       </template>
 
+      <!--Initial-->
       <template v-else>
         <div class="text-center text-neutral-600">
           Select brand and upload the image to get public image path.
