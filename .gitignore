@@ -2,5 +2,6 @@ tmp/
 .sass-cache/
 .zat
 .DS_Store
+/.DS_Store
 .config.json
 zcli.apps.config.json
