@@ -61,3 +61,9 @@ Licensed under the [`MIT License`](LICENSE).
 </p>
 
 Feel free to explore and if you like it, hit the star button or Buy me a coffee ⭐ ❤️
+
+<br>
+
+## Screenshots
+
+<img src="appScreenshots/1.png" alt="screenshot" width="800px" />
