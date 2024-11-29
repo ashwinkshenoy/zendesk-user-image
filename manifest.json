@@ -1,0 +1,24 @@
+{
+  "name": "Zendesk Vue3 app",
+  "version": "1.0.0",
+  "frameworkVersion": "2.0",
+  "author": {
+    "name": "Zendesk Professional Services",
+    "email": "support@zendesk.com",
+    "url": "https://support.zendesk.com"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "nav_bar": "assets/iframe.html"
+    }
+  },
+  "parameters": [
+    {
+      "name": "IS_PRODUCTION",
+      "type": "hidden",
+      "default": "true"
+    }
+  ]
+}
