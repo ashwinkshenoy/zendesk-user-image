@@ -5,3 +5,4 @@ tmp/
 /.DS_Store
 .config.json
 zcli.apps.config.json
+*.zip
