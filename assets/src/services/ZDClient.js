@@ -210,16 +210,13 @@ const ZDClient = {
 
   /**
    * Create image path by passing token from 'uploadImage' method response.
-   * @param {Object} headers
    * @param {Object} payload
-   * @param {String} file_size
    * @returns {Object}
    */
-  createImagePath(contentType, payload, fileSize) {
+  createImagePath(payload) {
     return ZDClient.request(`/api/v2/guide/user_images`, JSON.stringify(payload), {
       method: 'POST',
       contentType: 'application/json',
-      // file_size: fileSize,
     });
   },
 };
