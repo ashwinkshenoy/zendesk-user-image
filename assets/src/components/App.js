@@ -156,20 +156,16 @@ const App = {
           body: data.selectedFile,
           redirect: 'follow',
         };
-        const response = await fetch(data.uploadUrl, requestOptions);
+        await fetch(data.uploadUrl, requestOptions);
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Step 3: Create Image Path
         const pathPayload = {
           token: data.token,
           brand_id: data.selectedBrandId.toString(),
         };
-        const pathResponse = await ZDClient.createImagePath(
-          imagePayload.content_type,
-          pathPayload,
-          imagePayload.file_size,
-        );
+        const pathResponse = await ZDClient.createImagePath(pathPayload);
 
         const selectedbrand = data.allBrands.find(brand => brand.id === data.selectedBrandId);
         data.imagePath = `${selectedbrand.brand_url}${pathResponse.user_image.path}`;
