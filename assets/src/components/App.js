@@ -23,7 +23,7 @@ const template = `
         hover:file:bg-violet-100 cursor-pointer" />
       <button 
         @click="uploadImage" 
-        :disabled="!selectedFile || isCompleted" 
+        :disabled="!selectedFile || isCompleted || isLoading" 
         :class="[
           'bg-blue-500 hover:bg-blue-600 px-3 py-2 mt-5 rounded-md text-white cursor-pointer inline-flex items-center gap-2', 
           !selectedFile || isCompleted ? 'bg-gray-300 hover:bg-gray-300 cursor-not-allowed' : ''
