@@ -1,6 +1,6 @@
 {
   "app": {
-    "description": "App developed by Zendesk Professional Services.",
-    "name": "Zendesk Vue.js App"
+    "name": "User Image Upload",
+    "description": "An app to upload user images and display the image path."
   }
 }

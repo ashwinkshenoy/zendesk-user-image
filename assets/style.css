@@ -1,10 +1,7 @@
-html {
-  overflow-y: auto;
-}
-
 :root {
   --color-bg1: rgb(148, 0, 222);
   --color-bg2: rgb(0, 119, 224);
+  --grey1: #797979;
   --color1: 18, 113, 255;
   --color2: 221, 74, 255;
   --color3: 100, 220, 255;
@@ -13,6 +10,23 @@ html {
   --color-interactive: 140, 100, 255;
   --circle-size: 80%;
   --blending: hard-light;
+  --font-size: 13px;
+}
+html {
+  overflow-y: auto;
+  font-size: var(--font-size);
+}
+
+.c-btn__icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+
+.vs-button:disabled {
+  .c-btn__icon {
+    color: var(--grey1);
+  }
 }
 
 @keyframes moveInCircle {

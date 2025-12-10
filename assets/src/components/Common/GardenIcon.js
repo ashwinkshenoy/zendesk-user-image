@@ -6,7 +6,7 @@ const template = `
     :aria-labelledby="icon">
     <title :id="name || icon" >{{ name || icon }} Icon</title>
     <desc>{{ iconDescription || name }}</desc>
-    <use :href="'./index.svg#' + icon">
+    <use :href="'./images/index.svg#' + icon">
   </use>
   </svg>
 `;

@@ -1,11 +1,8 @@
 const template = `
 <div class="p-6">
-  <header class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Zendesk User Images</h1>
-  </header>
 
   <div class="upload-container grid grid-cols-2 gap-8">
-    <div class="bg-white shadow-md rounded-lg p-8 h-max">
+    <div class="bg-white shadow-md rounded-2xl p-6 h-max">
       <h2 class="text-xl font-semibold text-gray-700 mb-4">Upload User Image</h2>
 
       <div class="mb-4 w-3/5">
@@ -26,13 +23,21 @@ const template = `
         hover:file:bg-violet-100 cursor-pointer" />
       <button 
         @click="uploadImage" 
-        :disabled="!selectedFile" 
-        class="bg-blue-500 hover:bg-blue-600 px-3 py-2 mt-5 rounded-md text-white cursor-pointer">
-        Upload
+        :disabled="!selectedFile || isCompleted" 
+        :class="[
+          'bg-blue-500 hover:bg-blue-600 px-3 py-2 mt-5 rounded-md text-white cursor-pointer inline-flex items-center gap-2', 
+          !selectedFile || isCompleted ? 'bg-gray-300 hover:bg-gray-300 cursor-not-allowed' : ''
+        ]">
+        <garden-icon 
+          name="expand icon"
+          color="#ffffff"
+          icon="zd-upload">
+        </garden-icon>
+        <span>Upload</span>
       </button>
     </div>
 
-    <div class="bg-white shadow-md rounded-lg p-4 content-center">
+    <div class="bg-white shadow-md rounded-2xl p-4 content-center">
       <!--Loading-->
       <template v-if="isLoading">
         <div class="gradient-bg">
@@ -52,23 +57,29 @@ const template = `
         <div class="text-center">
           <h2 class="font-semibold">Uploaded Image Succesfully</h2>
           <img :src="imagePath" alt="Uploaded Image" class="w-2/5 rounded-lg mt-2 mb-4 mx-auto" />
-          <div class="text-neutral-600">
+          <div class="text-neutral-600 break-all">
             <span class="font-semibold">Image Path: </span><br>
-            {{ imagePath }}
+            <span class="break-all">{{ imagePath }}</span>
           </div>
           <button 
             @click="copyImagePath" 
             :disabled="!selectedFile" 
-            class="bg-blue-500 hover:bg-blue-600 px-3 py-2 mt-3 rounded-md text-white cursor-pointer">
-            Copy Path
+            class="bg-blue-500 hover:bg-blue-600 px-3 py-2 mt-3 rounded-md text-white cursor-pointer inline-flex items-center gap-2">
+            <garden-icon 
+              name="expand icon"
+              color="#ffffff"
+              icon="zd-copy">
+            </garden-icon>
+            <span>Copy Path</span>
           </button>
         </div>
       </template>
 
       <!--Initial-->
       <template v-else>
-        <div class="text-center text-neutral-600">
-          Select brand and upload the image to get public image path.
+        <div class="text-center text-neutral-600 font-light">
+          <span>Select brand and upload the image to get public image path.</span><br>
+          <span>Can be used in Guide for image path.</span>
         </div>
       </template>
     </div>
@@ -98,7 +109,7 @@ const App = {
     // ----- Data -----
     const data = reactive({
       isLoading: false,
-
+      isCompleted: false,
       selectedFile: null,
       selectedFileArrayBuffer: null,
       selectedBrandId: '',
@@ -129,6 +140,7 @@ const App = {
     }
 
     function onFileChange(event) {
+      data.isCompleted = false;
       data.selectedFile = event.target.files[0];
     }
 
@@ -173,6 +185,7 @@ const App = {
         console.error('Error uploading image:', error);
       } finally {
         data.isLoading = false;
+        data.isCompleted = true;
       }
     }
 
