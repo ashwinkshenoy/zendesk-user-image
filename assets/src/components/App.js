@@ -126,6 +126,13 @@ const App = {
 
     // ----- Methods -----
 
+    /**
+     * Loads all available brands from the Zendesk API
+     *
+     * Fetches the list of brands and transforms them into two formats:
+     * - brandOptions: formatted for the UI select dropdown (label/value pairs)
+     * - allBrands: raw brand data for reference during image upload
+     */
     async function loadBrands() {
       try {
         const response = await ZDClient.getBrands();
@@ -139,58 +146,84 @@ const App = {
       }
     }
 
+    /**
+     * Handles file input change event when user selects an image
+     *
+     * Stores the selected file and resets the completion status to allow
+     * re-uploading the new file.
+     *
+     * @param {Event} event - The file input change event
+     */
     function onFileChange(event) {
       data.isCompleted = false;
       data.selectedFile = event.target.files[0];
     }
 
+    /**
+     * Uploads an image to the selected brand's repository
+     *
+     * This function performs a 3-step process:
+     * 1. Requests upload credentials (URL, token, headers) from the Zendesk API
+     * 2. Uploads the image file to the provided URL using a PUT request
+     * 3. Creates a public image path by associating the uploaded image with the selected brand
+     *
+     * @async
+     * @returns {Promise<void>}
+     * @throws {Error} Logs errors to console if upload fails
+     */
     async function uploadImage() {
-      if (!data.selectedBrandId) return;
-      if (!data.selectedFile) return;
+      // Validate prerequisites
+      if (!data.selectedBrandId || !data.selectedFile) {
+        return;
+      }
+
       data.isLoading = true;
 
       try {
-        // Step 1: Create Image Upload URL and Token
-        const imagePayload = {
+        // Step 1: Request upload credentials from Zendesk API
+        const { upload } = await ZDClient.uploadImage({
           content_type: data.selectedFile.type,
           file_size: data.selectedFile.size,
-        };
-        const tokenResponse = await ZDClient.uploadImage(imagePayload);
+        });
 
-        data.uploadUrl = tokenResponse.upload.url;
-        data.token = tokenResponse.upload.token;
-        const headers = tokenResponse.upload.headers;
-
-        // Step 2: Upload Image (Regular Fetch)
-        const requestOptions = {
+        // Step 2: Upload the image file to the provided URL
+        await fetch(upload.url, {
           method: 'PUT',
-          headers,
+          headers: upload.headers,
           body: data.selectedFile,
           redirect: 'follow',
-        };
-        await fetch(data.uploadUrl, requestOptions);
+        });
 
+        // Brief delay to ensure server processing
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Step 3: Create Image Path
-        const pathPayload = {
-          token: data.token,
+        // Step 3: Create public image path
+        const { user_image } = await ZDClient.createImagePath({
+          token: upload.token,
           brand_id: data.selectedBrandId.toString(),
-        };
-        const pathResponse = await ZDClient.createImagePath(pathPayload);
+        });
 
-        const selectedbrand = data.allBrands.find(brand => brand.id === data.selectedBrandId);
-        data.imagePath = `${selectedbrand.brand_url}${pathResponse.user_image.path}`;
+        // Construct full image URL
+        const selectedBrand = data.allBrands.find(brand => brand.id === data.selectedBrandId);
+        data.imagePath = `${selectedBrand.brand_url}${user_image.path}`;
+        data.isCompleted = true;
       } catch (error) {
         console.error('Error uploading image:', error);
+        data.isCompleted = true;
       } finally {
         data.isLoading = false;
-        data.isCompleted = true;
       }
     }
 
     /**
-     * Copy Image Path to Clipboard
+     * Copies the uploaded image path to the user's clipboard
+     *
+     * Uses the Clipboard API to copy the image path and notifies the user.
+     * Falls back to an alert if the clipboard copy fails.
+     *
+     * @async
+     * @returns {Promise<void>}
+     * @throws {Error} Logs errors to console and shows alert if clipboard write fails
      */
     async function copyImagePath() {
       try {
